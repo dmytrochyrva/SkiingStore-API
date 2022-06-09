@@ -10,6 +10,6 @@ namespace SkiingStore.Infrastructure.Data
   {
     public SkiingStoreDb(DbContextOptions<SkiingStoreDb> options) : base(options) { }
 
-    public DbSet<TestModel> TestColumn { get; set; }
+    public DbSet<Product> Products { get; set; }
   }
 }

@@ -2,6 +2,8 @@
 // Libraries Namespaces
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 // Local Namespaces
@@ -12,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Configure Dbontext
+var conStr = builder.Configuration.GetConnectionString("MySqlConnection");
+builder.Services.AddDbContext<SkiingStoreDb>(opt => opt.UseMySql(conStr, ServerVersion.AutoDetect(conStr)));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
