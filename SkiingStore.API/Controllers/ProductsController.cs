@@ -1,4 +1,6 @@
 // Libraries Namespaces
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +24,13 @@ namespace SkiingStore.API.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> GetProducts()
+    public async Task<ActionResult<List<Product>>> GetProducts(float priceFrom, float priceTo, string category)
     {
-      var products = await this._skiingDbContext.Products.ToListAsync();
+      var products = await this._skiingDbContext.Products
+        .Where(product => priceFrom == 0 || product.Price >= priceFrom)
+        .Where(product => priceTo == 0 || product.Price <= priceTo)
+        .Where(product => String.IsNullOrEmpty(category) || product.Category == category)
+        .ToListAsync();
 
       return products;
     }
