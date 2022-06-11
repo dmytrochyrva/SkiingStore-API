@@ -24,15 +24,27 @@ namespace SkiingStore.API.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> GetProducts(float priceFrom, float priceTo, string category)
+    public async Task<ActionResult<ProductsDTO>> GetProducts(float priceFrom, float priceTo, string category, int pageNumber = 1, int pageSize = 10)
     {
-      var products = await this._skiingDbContext.Products
+
+      var products = this._skiingDbContext.Products
         .Where(product => priceFrom == 0 || product.Price >= priceFrom)
         .Where(product => priceTo == 0 || product.Price <= priceTo)
-        .Where(product => String.IsNullOrEmpty(category) || product.Category == category)
-        .ToListAsync();
+        .Where(product => String.IsNullOrEmpty(category) || product.Category == category);
 
-      return products;
+      var itemsCount = await products.CountAsync();
+
+      var filtered = await products
+       .Skip((pageNumber - 1) * pageSize)
+       .Take(pageSize)
+       .ToListAsync();
+
+      return new ProductsDTO
+      {
+        TotalItems = itemsCount,
+        PageNumber = pageNumber,
+        Products = filtered
+      };
     }
 
     [HttpGet("{id}")]
