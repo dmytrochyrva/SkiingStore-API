@@ -11,5 +11,7 @@ namespace SkiingStore.Infrastructure.Data
     public SkiingStoreDb(DbContextOptions<SkiingStoreDb> options) : base(options) { }
 
     public DbSet<Product> Products { get; set; }
+
+    public DbSet<Category> Categories { get; set; }
   }
 }

@@ -36,5 +36,14 @@ namespace SkiingStore.API.Controllers
 
       return product;
     }
+
+    [HttpGet]
+    [Route("categories")]
+    public async Task<ActionResult<List<Category>>> GetCategories()
+    {
+      var categories = await this._skiingDbContext.Categories.ToListAsync();
+
+      return categories;
+    }
   }
 }
