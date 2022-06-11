@@ -65,5 +65,35 @@ namespace SkiingStore.API.Controllers
 
       return categories;
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Product>> AddProduct(Product product)
+    {
+      product.Id = Guid.NewGuid().ToString("N");
+
+      await this._skiingDbContext.Products.AddAsync(product);
+      await this._skiingDbContext.SaveChangesAsync();
+
+      return product;
+    }
+
+    [HttpPatch]
+    public async Task<ActionResult<Product>> UpdateProduct(Product product)
+    {
+      var existProd = await this._skiingDbContext.Products.FindAsync(product.Id);
+
+
+      if (existProd != null)
+      {
+        this._skiingDbContext.Entry(existProd).CurrentValues.SetValues(product);
+        await this._skiingDbContext.SaveChangesAsync();
+      }
+      else
+      {
+        return NotFound("There is not product with this id.");
+      }
+
+      return await this._skiingDbContext.Products.FindAsync(product.Id);
+    }
   }
 }
