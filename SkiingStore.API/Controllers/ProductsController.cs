@@ -34,7 +34,9 @@ namespace SkiingStore.API.Controllers
     {
       var product = await this._skiingDbContext.Products.FindAsync(id);
 
-      return product;
+      return product == null
+        ? NotFound("There is no product with this id")
+        : product;
     }
 
     [HttpGet]
